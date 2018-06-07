@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rms-gameq
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rms-gameq
+    spec:
+      containers:
+      - name: rms-gameq
+        image: mike1pol/gameq:v0.1.0-{{build.commit}}
+        ports:
+          - containerPort: 3000
+        imagePullPolicy: Always

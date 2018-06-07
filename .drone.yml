@@ -1,0 +1,37 @@
+services:
+pipeline:
+  docker:
+    image: plugins/docker
+    repo: mike1pol/gameq
+    dockerfile: Dockerfile
+    tags: v0.1.0-${DRONE_COMMIT}
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+  kube:
+    image: vallard/drone-kube
+    template: deployment.yaml
+    namespace: default
+    secrets: [ KUBE_TOKEN, KUBE_SERVER, KUBE_CA ]
+    when:
+      branch: master
+  notify:
+    image: appleboy/drone-telegram
+    format: markdown
+    message: >
+     {{#success build.status}}✅{{else}}❌{{/success}} Build {{build.status}}: *{{repo.owner}}/{{repo.name}}*
+
+     build: {{build.number}}
+
+     commit: {{commit.branch}}:{{commit.sha}}
+
+     By: {{commit.author}}
+
+     {{commit.message}}
+
+     {{build.link}}
+    secrets:
+      - source: telegram_token
+        target: telegram_token
+      - source: telegram_to
+        target: telegram_to
