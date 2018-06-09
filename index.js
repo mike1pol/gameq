@@ -4,9 +4,10 @@ const gamedig = require("gamedig");
 const app = express();
 
 app.get("/", (req, res) => {
-  if ("host" in req.query && "port" in req.query) {
+  if ("host" in req.query && "port" in req.query && "type" in req.query) {
     const host = req.query.host;
     const port = req.query.port;
+    const type = req.query.type;
     return gamedig.query({
       type: "arma3",
       host: host,
@@ -21,7 +22,7 @@ app.get("/", (req, res) => {
         res.status(200).json({status: false});
       });
   }
-  return res.status(400).json({error: "Host or port not set"});
+  return res.status(400).json({error: "Host, port or server type not set"});
 });
 
 app.listen(3000, () => {

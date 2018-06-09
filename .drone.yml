@@ -1,10 +1,18 @@
 services:
 pipeline:
-  docker:
+  docker-dep:
     image: plugins/docker
     repo: mike1pol/gameq
     dockerfile: Dockerfile
     tags: v0.1.0-${DRONE_COMMIT}
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: deployment
+  docker:
+    image: plugins/docker
+    repo: mike1pol/gameq
+    dockerfile: Dockerfile
+    tags: latest
     secrets: [ docker_username, docker_password ]
     when:
       branch: master
@@ -14,7 +22,7 @@ pipeline:
     namespace: default
     secrets: [ KUBE_TOKEN, KUBE_SERVER, KUBE_CA ]
     when:
-      branch: master
+      branch: deployment
   notify:
     image: appleboy/drone-telegram
     format: markdown
