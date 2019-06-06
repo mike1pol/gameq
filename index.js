@@ -10,8 +10,8 @@ app.get("/", (req, res) => {
     return gamedig.query({
       type: "arma3",
       host: host,
-      maxAttempts: 2,
-      socketTimeout: 2000
+      maxAttempts: 3,
+      socketTimeout: 10000
     })
       .then(state => {
         res.status(200).json({...state, status: true});
